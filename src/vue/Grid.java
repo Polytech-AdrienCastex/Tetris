@@ -20,10 +20,8 @@ import modele.Piece;
  *
  * @author p1002239
  */
-public class Grid extends JPanel implements Observer
+public class Grid extends HiddenPanel implements Observer
 {
-    private static final Color BG_COLOR = new Color(0,0,0,0);
-    
     public Grid()
     {
         super();
@@ -34,16 +32,17 @@ public class Grid extends JPanel implements Observer
         layout.setHgap(1);
         layout.setVgap(1);
         
-        this.cases = new Case[modele.Grid.MAX_W][modele.Grid.MAX_H];
-        for(int y = 0; y < modele.Grid.MAX_H; y++)
-            for(int x = 0; x < modele.Grid.MAX_W; x++)
+        this.cases = new Case[modele.Grid.MAX_H][modele.Grid.MAX_W];
+        for(int y = 0; y < modele.Grid.MAX_W; y++)
+            for(int x = 0; x < modele.Grid.MAX_H; x++)
             {
                 Case elem = new Case();
                 this.add(elem);
                 this.cases[x][y] = elem;
             }
         
-        this.setBackground(BG_COLOR);
+        this.setBackground(Color.black);
+        this.setBorder(BorderFactory.createMatteBorder(0, 7, 0, 7, Color.magenta));
     }
     private Case[][] cases;
     

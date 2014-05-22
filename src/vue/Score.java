@@ -9,36 +9,51 @@ package vue;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import modele.Score.ScoreChangedEventArg;
 
 /**
  *
  * @author Adrien
  */
-public class Score extends JPanel implements Observer
+public class Score extends HiddenPanel implements Observer
 {
-    private static final Color BG_COLOR = new Color(0,0,0,0);
+    private static final Color FORE_COLOR = Color.MAGENTA;
     
     public Score()
     {
-        super(new BorderLayout());
+        super();
+        super.setLayout(new BorderLayout(0, 0));
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
         
         label = new JLabel();
-        label.setForeground(Color.WHITE);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setFont(new Font(label.getFont().getName(), Font.BOLD, 20));
+        label.setForeground(FORE_COLOR);
         
-        this.add(label, BorderLayout.PAGE_START);
+        panel.add(label, BorderLayout.CENTER);
+        this.add(panel, BorderLayout.CENTER);
         
-        setScore(0);
         
-        this.setBackground(BG_COLOR);
+        
+        this.setBorder(BorderFactory.createCompoundBorder(
+                new EmptyBorder(10, 10, 0, 10),
+                BorderFactory.createMatteBorder(7, 7, 0, 7, FORE_COLOR)));
     }
     
     private JLabel label;

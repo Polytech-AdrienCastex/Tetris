@@ -57,6 +57,8 @@ public class FenetrePrincipale extends JFrame implements KeyListener
     }
     private Grid grid;
     private Score score;
+    private PieceQueue queue;
+    
     private Runtime runtime;
     
     private void build()
@@ -70,42 +72,35 @@ public class FenetrePrincipale extends JFrame implements KeyListener
         //setLayout(new BorderLayout());
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.VERTICAL;
-        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 1.0;
+        c.weightx = 1.0;
 
         
         grid = new Grid();
         grid.setSize(400, 100);
-        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 1;
         c.gridy = 0;
-        c.ipadx = 400;
-        c.weighty = 100;
         c.gridheight = 3;
+        c.weighty = 1.0;
+        c.weightx = 0.6;
         this.add(grid, c);
         
         score = new Score();
-        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 2;
-        c.gridy = 0;
-        c.ipadx = 100;
+        c.gridy = 2;
         c.gridheight = 1;
+        c.weighty = 0.1;
+        c.weightx = 0.1;
         this.add(score, c);
         
-        /*
-        Border borderGrid = BorderFactory.createEmptyBorder(0, 130, 0, 0);
-        
-        grid = new Grid();
-        grid.setSize(400, 100);
-        grid.setBorder(borderGrid);
-        this.add(grid, BorderLayout.CENTER);
-        
-        Border borderScore = BorderFactory.createEmptyBorder(0, 70, 0, 0);
-        
-        score = new Score();
-        score.setBorder(borderScore);
-        this.add(score, BorderLayout.EAST);
-        */
+        queue = new PieceQueue();
+        queue.setSize(100, 0);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 0.9;
+        c.weightx = 0.3;
+        this.add(queue, c);
     }
     
     private void addListeners()
@@ -125,7 +120,7 @@ public class FenetrePrincipale extends JFrame implements KeyListener
     
     public void setObservers()
     {
-        runtime.setObservers(grid, score);
+        runtime.setObservers(grid, score, queue);
     }
     
     class ImagePanel extends JComponent

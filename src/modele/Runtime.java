@@ -121,16 +121,22 @@ public class Runtime implements Runnable
             grid.setVolatilePiece(currentPiece);
     }
     
-    public void setObservers(vue.Grid grid, vue.Score score)
+    public void setObservers(vue.Grid grid, vue.Score score, vue.PieceQueue queue)
     {
         this.grid.addObserver(grid);
         this.score.addObserver(score);
+        this.queue.addObserver(queue);
     }
     
     //<editor-fold desc="Moves">
+    private boolean isBlocked()
+    {
+        return finished || pause;
+    }
+    
     public void MoveLeft()
     {
-        if(finished)
+        if(isBlocked())
             return;
         
         currentPiece.moveLeft();
@@ -141,7 +147,7 @@ public class Runtime implements Runnable
     }
     public void MoveRight()
     {
-        if(finished)
+        if(isBlocked())
             return;
         
         currentPiece.moveRight();
@@ -152,7 +158,7 @@ public class Runtime implements Runnable
     }
     public void Rotate()
     {
-        if(finished)
+        if(isBlocked())
             return;
         
         currentPiece.rotateRight90();
@@ -163,7 +169,7 @@ public class Runtime implements Runnable
     }
     public void PushBottom()
     {
-        if(finished)
+        if(isBlocked())
             return;
         
         if(grid.IsPossible(currentPiece))

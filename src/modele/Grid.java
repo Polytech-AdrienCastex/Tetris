@@ -18,7 +18,7 @@ public class Grid extends Observable
 {
     public static final int MAX_W = 15;
     public static final int MAX_H = 15;
-    public static final Color DEFAULT_COLOR = Color.DARK_GRAY;
+    public static final Color DEFAULT_COLOR = new Color(10, 10, 10);
     
     public Grid()
     {
@@ -136,6 +136,7 @@ public class Grid extends Observable
     
     
     
+    //<editor-fold desc="Events">
     public class GridChangedEventArg
     {
         public GridChangedEventArg(Color[][] cases, boolean isPersistent)
@@ -156,4 +157,5 @@ public class Grid extends Observable
             return _cases;
         }
     }
+    //</editor-fold>
 }
