@@ -6,8 +6,13 @@
 
 package vue;
 
+import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JLabel;
@@ -20,16 +25,16 @@ import modele.Score.ScoreChangedEventArg;
  */
 public class Score extends JPanel implements Observer
 {
-    private static Color BG_COLOR = Color.BLACK;
+    private static final Color BG_COLOR = new Color(0,0,0,0);
     
     public Score()
     {
-        super();
+        super(new BorderLayout());
         
         label = new JLabel();
         label.setForeground(Color.WHITE);
         
-        this.add(label);
+        this.add(label, BorderLayout.PAGE_START);
         
         setScore(0);
         

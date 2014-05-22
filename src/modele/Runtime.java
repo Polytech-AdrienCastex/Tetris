@@ -9,13 +9,18 @@ package modele;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author p1002239
  */
-public class Runtime implements Runnable, KeyListener
+public class Runtime implements Runnable
 {
+    private static final int START_TIME = 1000; // ms
+    private static final int DECREMENT_TIME = 50; // ms
+    
     public Runtime()
     {
         Piece.setDefaultPosition(new Point(Grid.MAX_W / 2, 0));
@@ -45,6 +50,8 @@ public class Runtime implements Runnable, KeyListener
             finished = false;
             score.reset();
             
+            int time = START_TIME;
+            
             while(!finished)
             {
                 currentPiece.moveDown();
@@ -54,14 +61,53 @@ public class Runtime implements Runnable, KeyListener
                 {
                     currentPiece.cancelLastMove();
                     nextPiece();
+                    
+                    // Accelerer le temps
+                    time -= DECREMENT_TIME;
                 }
                 
-                Thread.sleep(1000);
+                Thread.sleep(time);
+                ManagePause();
             }
         }
         catch (InterruptedException ex)
         { }
     }
+    
+    //<editor-fold desc="Pause / Resume">
+    private boolean pause = false;
+    private void ManagePause()
+    {
+        if(pause)
+        {
+            try
+            {
+                synchronized(this)
+                {
+                    this.wait();
+                }
+            }
+            catch (InterruptedException ex)
+            { }
+            finally
+            {
+                setPause(false);
+            }
+        }
+    }
+    public void Pause()
+    {
+        setPause(true);
+    }
+    synchronized public void setPause(boolean value)
+    {
+        pause = value;
+    }
+    synchronized public void Resume()
+    {
+        this.notifyAll();
+    }
+    //</editor-fold>
     
     private void nextPiece()
     {
@@ -80,69 +126,73 @@ public class Runtime implements Runnable, KeyListener
         this.grid.addObserver(grid);
         this.score.addObserver(score);
     }
-
-    //<editor-fold desc="Keys">
-    @Override
-    public void keyTyped(KeyEvent e)
-    { }
-
-    @Override
-    public void keyPressed(KeyEvent e)
+    
+    //<editor-fold desc="Moves">
+    public void MoveLeft()
     {
         if(finished)
             return;
-            
-        switch(e.getKeyChar())
+        
+        currentPiece.moveLeft();
+        if(grid.IsPossible(currentPiece))
+            grid.setVolatilePiece(currentPiece);
+        else
+            currentPiece.cancelLastMove();
+    }
+    public void MoveRight()
+    {
+        if(finished)
+            return;
+        
+        currentPiece.moveRight();
+        if(grid.IsPossible(currentPiece))
+            grid.setVolatilePiece(currentPiece);
+        else
+            currentPiece.cancelLastMove();
+    }
+    public void Rotate()
+    {
+        if(finished)
+            return;
+        
+        currentPiece.rotateRight90();
+        if(grid.IsPossible(currentPiece))
+            grid.setVolatilePiece(currentPiece);
+        else
+            currentPiece.cancelLastRotate();
+    }
+    public void PushBottom()
+    {
+        if(finished)
+            return;
+        
+        if(grid.IsPossible(currentPiece))
         {
-            // Left
-            case 'Q':
-            case 'q':
-                currentPiece.moveLeft();
-                if(grid.IsPossible(currentPiece))
-                    grid.setVolatilePiece(currentPiece);
-                else
-                    currentPiece.cancelLastMove();
-                break;
-                
-            // Right
-            case 'D':
-            case 'd':
-                currentPiece.moveRight();
-                if(grid.IsPossible(currentPiece))
-                    grid.setVolatilePiece(currentPiece);
-                else
-                    currentPiece.cancelLastMove();
-                break;
-                
-            // Direct bottom
-            case 'S':
-            case 's':
-                if(grid.IsPossible(currentPiece))
-                {
-                    do
-                    {
-                        currentPiece.moveDown();
-                    } while(grid.IsPossible(currentPiece));
+            do
+            {
+                currentPiece.moveDown();
+            } while(grid.IsPossible(currentPiece));
 
-                    currentPiece.cancelLastMove();
-                    nextPiece();
-                }
-                break;
-                
-            case ' ':
-                currentPiece.rotateRight90();
-                if(grid.IsPossible(currentPiece))
-                    grid.setVolatilePiece(currentPiece);
-                else
-                    currentPiece.cancelLastRotate();
-                break;
+            currentPiece.cancelLastMove();
+            nextPiece();
         }
     }
-
-    @Override
-    public void keyReleased(KeyEvent e)
-    { }
     //</editor-fold>
     
     
+    //<editor-fold desc="Events">
+    public class TerminatedEventArg
+    {
+        public TerminatedEventArg(int score)
+        {
+            value = score;
+        }
+        
+        private final int value;
+        public int getFinalScore()
+        {
+            return value;
+        }
+    }
+    //</editor-fold>
 }

@@ -22,7 +22,7 @@ import modele.Piece;
  */
 public class Grid extends JPanel implements Observer
 {
-    private static Color BG_COLOR = Color.BLACK;
+    private static final Color BG_COLOR = new Color(0,0,0,0);
     
     public Grid()
     {

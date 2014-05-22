@@ -29,7 +29,6 @@ public class Grid extends Observable
         for(int x = 0; x < MAX_W; x++)
             for(int y = 0; y < MAX_H; y++)
                 this.cases_persistent[x][y] = DEFAULT_COLOR;
-        
     }
     
     private final Color[][] cases_persistent;
