@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Runtime implements Runnable
 {
     private static final int START_TIME = 1000; // ms
-    private static final int DECREMENT_TIME = 50; // ms
+    private static final int DECREMENT_TIME = 100; // ms
     
     public Runtime()
     {

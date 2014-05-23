@@ -76,12 +76,7 @@ public class Piece
         switch(new Random().nextInt(7))
         {
             case 0:
-                regenerateMatrix(1, 4, false);
-                
-                matrix[0][0] = true;
-                matrix[0][1] = true;
-                matrix[0][2] = true;
-                matrix[0][3] = true;
+                regenerateMatrix(4, 1, true);
                 
                 _color = Color.RED;
                 break;

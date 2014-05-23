@@ -69,7 +69,7 @@ public class Grid extends HiddenPanel implements Observer
                 for(int y = 0; y < modele.Grid.MAX_H; y++)
                     cases[x][y].SetColor(colors[x][y]);
             
-            return;
+            this.getParent().repaint();
         }
     }
     

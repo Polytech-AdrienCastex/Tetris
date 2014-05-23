@@ -10,6 +10,7 @@ import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -38,16 +39,21 @@ public class Score extends HiddenPanel implements Observer
         super();
         super.setLayout(new BorderLayout(0, 0));
         
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.BLACK);
+        JPanel panel = createCenteredPanel(this);
         
-        label = new JLabel();
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setFont(new Font(label.getFont().getName(), Font.BOLD, 20));
-        label.setForeground(FORE_COLOR);
+        scoreLabel = new JLabel();
+        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.BOLD, 20));
+        scoreLabel.setForeground(FORE_COLOR);
         
-        panel.add(label, BorderLayout.CENTER);
-        this.add(panel, BorderLayout.CENTER);
+        createCenteredPanel(panel, BorderLayout.CENTER).add(scoreLabel);
+        
+        nbLabel = new JLabel();
+        nbLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nbLabel.setFont(new Font(nbLabel.getFont().getName(), Font.BOLD, 15));
+        nbLabel.setForeground(FORE_COLOR);
+        
+        createCenteredPanel(panel, BorderLayout.SOUTH).add(nbLabel);
         
         
         
@@ -55,11 +61,32 @@ public class Score extends HiddenPanel implements Observer
                 new EmptyBorder(10, 10, 0, 10),
                 BorderFactory.createMatteBorder(7, 7, 0, 7, FORE_COLOR)));
     }
+    private JPanel createCenteredPanel(Container parent)
+    {
+        JPanel panel = new JPanel(new BorderLayout(0, 0));
+        panel.setBackground(Color.BLACK);
+        parent.add(panel, BorderLayout.CENTER);
+        return panel;
+    }
+    private JPanel createCenteredPanel(Container parent, String borderLayout)
+    {
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+        parent.add(panel, borderLayout);
+        return panel;
+    }
     
-    private JLabel label;
+    private JLabel scoreLabel;
+    private JLabel nbLabel;
     private void setScore(int value)
     {
-        label.setText("Score : " + value);
+        scoreLabel.setText("Score : " + value);
+        nbLabel.setText("Ligne : 0");
+    }
+    private void setScore(int value, int nb)
+    {
+        scoreLabel.setText("Score : " + value);
+        nbLabel.setText("Ligne" + (nb > 1 ? "s" : "") + " : " + nb);
     }
 
     @Override
@@ -67,9 +94,9 @@ public class Score extends HiddenPanel implements Observer
     {
         if(obj instanceof ScoreChangedEventArg)
         {
-            int score = ((ScoreChangedEventArg)obj).getScore();
+            ScoreChangedEventArg scoreArg = ((ScoreChangedEventArg)obj);
             
-            setScore(score);
+            setScore(scoreArg.getScore(), scoreArg.getNb());
         }
     }
     

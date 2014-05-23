@@ -19,11 +19,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -66,7 +77,7 @@ public class FenetrePrincipale extends JFrame implements KeyListener
         setTitle("Tetris");
         setSize(600, 400);
         
-        ImagePanel img = new ImagePanel("F:\\ProjetInfo\\Images\\TetrisBg.jpg");
+        ImagePanel img = new ImagePanel("H:\\ProjetInfo\\Images\\TetrisBg.jpg");
         this.setContentPane(img);
         
         //setLayout(new BorderLayout());
@@ -101,7 +112,42 @@ public class FenetrePrincipale extends JFrame implements KeyListener
         c.weighty = 0.9;
         c.weightx = 0.3;
         this.add(queue, c);
+        
+        playSound("bsound.mp3");
     }
+    
+    public static synchronized void playSound(final String url) {
+    new Thread(new Runnable() {
+    // The wrapper thread is unnecessary, unless it blocks on the
+    // Clip finishing; see comments.
+      public void run() {
+        try {
+            new JFXPanel();
+            
+            String fullUrl = "file:///" + new File(url).getAbsolutePath();
+            fullUrl = Paths.get(new File(url).getAbsolutePath()).toUri().toString();
+            System.out.println(fullUrl);
+            
+            Media hit = new Media(fullUrl);
+            MediaPlayer mediaPlayer = new MediaPlayer(hit);
+            mediaPlayer.play();
+            
+            /*
+            System.out.print("1");
+          Clip clip = AudioSystem.getClip();
+            System.out.print("2");
+            FileInputStream s = new FileInputStream(url);
+            System.out.print("3");
+          AudioInputStream inputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(s));
+            System.out.print("4");
+          clip.open(inputStream);
+          clip.start(); */
+        } catch (Exception e) {
+          System.err.println(e.getMessage());
+        }
+      }
+    }).start();
+  }
     
     private void addListeners()
     {
