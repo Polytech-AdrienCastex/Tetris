@@ -14,14 +14,14 @@ import java.util.Random;
  *
  * @author p1002239
  */
-public class Piece
+public abstract class Piece
 {
     public Piece()
     {
         generate();
     }
     
-    private boolean[][] matrix;
+    protected boolean[][] matrix;
     
     private static Point _defaultposition = new Point(0, 0);
     public static Point getDefaultPosition()
@@ -54,7 +54,7 @@ public class Piece
     {
         return _position;
     }
-    private void setPosition(Point Position)
+    protected void setPosition(Point Position)
     {
         _lastposition = _position;
         _position = Position;
@@ -70,82 +70,13 @@ public class Piece
     {
         return _color;
     }
-    
-    private void generate()
+    protected void setColor(Color color)
     {
-        switch(new Random().nextInt(7))
-        {
-            case 0:
-                regenerateMatrix(4, 1, true);
-                
-                _color = Color.RED;
-                break;
-                
-            case 1:
-                regenerateMatrix(3, 2, false);
-                
-                matrix[0][0] = true;
-                matrix[1][0] = true;
-                matrix[2][0] = true;
-                matrix[2][1] = true;
-                
-                _color = Color.WHITE;
-                break;
-                
-            case 2:
-                regenerateMatrix(3, 2, false);
-                
-                matrix[0][0] = true;
-                matrix[1][0] = true;
-                matrix[2][0] = true;
-                matrix[0][1] = true;
-                
-                _color = Color.ORANGE;
-                break;
-                
-            case 3:
-                regenerateMatrix(2, 2, true);
-                
-                _color = Color.YELLOW;
-                break;
-                
-            case 4:
-                regenerateMatrix(3, 2, false);
-                
-                matrix[0][1] = true;
-                matrix[1][1] = true;
-                matrix[1][0] = true;
-                matrix[2][0] = true;
-                
-                _color = Color.MAGENTA;
-                break;
-                
-            case 5:
-                regenerateMatrix(3, 2, false);
-                
-                matrix[0][0] = true;
-                matrix[1][0] = true;
-                matrix[2][0] = true;
-                matrix[1][1] = true;
-                
-                _color = Color.CYAN;
-                break;
-                
-            case 6:
-                regenerateMatrix(3, 2, false);
-                
-                matrix[0][0] = true;
-                matrix[1][0] = true;
-                matrix[1][1] = true;
-                matrix[2][1] = true;
-                
-                _color = Color.GREEN;
-                break;
-        }
-        
-        setPosition(getDefaultPosition());
+        _color = color;
     }
-    private void regenerateMatrix(int size_x, int size_y, boolean defaultvalue)
+    
+    protected abstract void generate();
+    protected void regenerateMatrix(int size_x, int size_y, boolean defaultvalue)
     {
         matrix = new boolean[size_x][size_y];
         

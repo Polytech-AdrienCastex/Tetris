@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.general;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -13,13 +13,12 @@ import java.util.Observer;
  *
  * @author Adrien
  */
-public abstract class RRuntime extends Observable implements Runnable
+public abstract class TimedRuntime extends Observable implements Runnable
 {
-    public RRuntime()
-    {
-        
-    }
+    public TimedRuntime()
+    { }
     
+    //<editor-fold defaultstate="collapsed" desc="Time">
     private int start_time = 1000; // ms
     protected void setStartTime(int value)
     {
@@ -39,25 +38,41 @@ public abstract class RRuntime extends Observable implements Runnable
     {
         return decrement_time;
     }
+    //</editor-fold>
     
     
+    //<editor-fold defaultstate="collapsed" desc="Termination">
     private boolean finished;
     protected void terminate()
     {
+        terminate(0);
+    }
+    protected void terminate(int score)
+    {
         finished = true;
         terminedGame();
+        
+        this.setChanged();
+        this.notifyObservers(new TerminatedEventArg(this, score));
     }
     public boolean isTerminated()
     {
         return finished;
     }
+    public boolean isBlocked()
+    {
+        return finished || pause;
+    }
+    //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="Abstract methods">
-    public abstract void setObservers(Observer... obs);
+    public abstract void setObservers(Observer[] obs);
     
     protected abstract void initialize();
-    protected abstract boolean timeIncremented(); // Returns true if acceleration is required
+    protected abstract boolean timeIncremented(); // Returns true if acceleration is required and next step
+    protected abstract boolean checkTerminated();
+    protected abstract void nextStep();
     protected abstract void terminedGame();
     protected abstract void uninitialize();
     protected abstract void error();
@@ -67,34 +82,47 @@ public abstract class RRuntime extends Observable implements Runnable
     @Override
     public void run()
     {
-        try
+        new Thread(new Runnable()
         {
-            finished = false;
-            int time = getStartTime();
-            
-            initialize();
-            
-            while(!isTerminated())
+            @Override
+            public void run()
             {
-                if(timeIncremented())
-                    time -= getDecrementTime();
-                
-                Thread.sleep(time);
-                ManagePause();
+                try
+                {
+                    finished = false;
+                    int time = getStartTime();
+
+                    initialize();
+
+                    while(!isTerminated())
+                    {
+                        if(timeIncremented())
+                        {
+                            time -= getDecrementTime();
+                            nextStep();
+                        }
+
+                        if(checkTerminated())
+                            terminate();
+
+                        Thread.sleep(time);
+                        ManagePause();
+                    }
+
+                    uninitialize();
+                }
+                catch (InterruptedException ex)
+                {
+                    uninitialize();
+                }
+                catch (Exception ex)
+                {
+                    error();
+                }
             }
-            
-            uninitialize();
-        }
-        catch (InterruptedException ex)
-        {
-            error();
-        }
+        }).start();
     }
     
-    public boolean isBlocked()
-    {
-        return finished || pause;
-    }
     
     
     //<editor-fold defaultstate="collapsed" desc="Pause / Resume">
@@ -141,10 +169,6 @@ public abstract class RRuntime extends Observable implements Runnable
             Pause();
     }
     //</editor-fold>
-    
-    
-    
-    
     
     
     //<editor-fold defaultstate="collapsed" desc="Events">

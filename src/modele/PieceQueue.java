@@ -6,27 +6,33 @@
 
 package modele;
 
+import modele.general.Event;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Adrien
  */
-public class PieceQueue extends Observable
+public class PieceQueue<T extends Piece> extends Observable
 {
     public static final int NB_ELEMENTS = 5;
     
-    public PieceQueue()
+    public PieceQueue(Class<T> c)
     {
+        this.c = c;
         pieces = new LinkedList();
         
         for(int i = 0; i < NB_ELEMENTS; i++)
             insertNew();
     }
+    
+    private final Class<T> c;
     
     private final LinkedList<Piece> pieces;
     
@@ -48,11 +54,16 @@ public class PieceQueue extends Observable
     
     private void insertNew()
     {
-        Piece p = new Piece();
-        pieces.add(p);
-        
-        super.setChanged();
-        super.notifyObservers(new PieceQueueChangedEventArg(this, pieces.iterator()));
+        try
+        {
+            Piece p = c.newInstance();
+            pieces.add(p);
+            
+            super.setChanged();
+            super.notifyObservers(new PieceQueueChangedEventArg(this, pieces.iterator()));
+        }
+        catch (InstantiationException | IllegalAccessException ex)
+        { }
     }
     
     @Override

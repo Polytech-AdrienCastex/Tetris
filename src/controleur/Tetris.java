@@ -7,8 +7,10 @@
 package controleur;
 
 import modele.Grid;
+import modele.TetrisRuntime;
+import modele.general.RuntimeManagerMulti;
+import modele.general.RuntimeManagerSolo;
 import vue.GameWindow;
-import modele.Runtime;
 
 /**
  *
@@ -21,8 +23,8 @@ public class Tetris
     {
         System.setProperty("Debug", "true");
         
-        Runtime runtime = new Runtime();
-        GameWindow fenetre = new GameWindow(runtime);
+        RuntimeManagerMulti runtime = new RuntimeManagerMulti(3, TetrisRuntime.class);
+        GameWindow fenetre = new GameWindow(runtime, 2);
         
         fenetre.setVisible(true);
         runtime.run();

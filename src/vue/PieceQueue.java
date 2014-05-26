@@ -88,7 +88,7 @@ public class PieceQueue extends HiddenPanel implements Observer
             return;
         }
         
-        if(obj instanceof modele.Runtime.TerminatedEventArg)
+        if(obj instanceof modele.general.TimedRuntime.TerminatedEventArg)
         {
             for(int x = 0; x < MAX_H; x++)
                 for(int y = 0; y < MAX_W; y++)

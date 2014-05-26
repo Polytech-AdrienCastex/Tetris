@@ -80,7 +80,7 @@ public class Grid extends HiddenPanel implements Observer
             return;
         }
         
-        if(obj instanceof modele.Runtime.TerminatedEventArg)
+        if(obj instanceof modele.general.TimedRuntime.TerminatedEventArg)
         {
             for(int x = 0; x < modele.Grid.MAX_W; x++)
                 for(int y = 0; y < modele.Grid.MAX_H; y++)

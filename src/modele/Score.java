@@ -6,6 +6,7 @@
 
 package modele;
 
+import modele.general.Event;
 import java.util.Observable;
 
 /**

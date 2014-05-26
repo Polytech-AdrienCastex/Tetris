@@ -32,7 +32,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import modele.Runtime;
+import modele.general.RuntimeManagerMulti;
+import modele.TetrisRuntime;
 
 /**
  *
@@ -40,13 +41,17 @@ import modele.Runtime;
  */
 public class GameWindow extends JFrame implements KeyListener, Observer
 {
-    public GameWindow(Runtime runtime)
+    public GameWindow(RuntimeManagerMulti runtime)
+    {
+        this(runtime, 5);
+    }
+    public GameWindow(RuntimeManagerMulti runtime, int nbPerLine)
     {
         super();
         
         this.runtime = runtime;
         
-        build();
+        build(nbPerLine);
         
         addListeners();
         
@@ -54,26 +59,49 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         
         shown();
     }
-    private Grid grid;
-    private Score score;
-    private PieceQueue queue;
+    private Grid[] grids;
+    private Score[] scores;
+    private PieceQueue[] queues;
     
     private Sound bgSound;
     
-    private Runtime runtime;
+    private static final int[] keysGeneral = new int[]
+    {
+        27, // Escape
+        80  // P
+    };
+    private static final int[][] keysMap = new int[][]
+    {
+        new int[]
+        {
+            81, // Q
+            68, // D
+            83, // S
+            32  // Space
+        },
+        new int[]
+        {
+            100, // 4
+            102, // 6
+            101, // 5
+            96   // 0
+        }
+    };
     
-    private void build()
+    private RuntimeManagerMulti<TetrisRuntime> runtime;
+    
+    private void build(int nbPerLine)
     {
         setTitle("Tetris");
-        setSize(600, 400);
+        int x = runtime.getNbPlayers();
+        if(x > nbPerLine)
+            x = nbPerLine;
+        setSize(600 * x, 400 * (runtime.getNbPlayers() / nbPerLine + 1));
         
         ImagePanel img = new ImagePanel("H:\\ProjetInfo\\Images\\TetrisBg.jpg");
         this.setContentPane(img);
         
         this.setLayout(new GridBagLayout());
-        grid = new Grid();
-        score = new Score();
-        queue = new PieceQueue();
         /*
         JPanel panel_1 = new JPanel();
         JPanel panel_2 = new JPanel();
@@ -87,14 +115,24 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         this.add(panel_2, BorderLayout.EAST);
         this.add(panel_3, BorderLayout.CENTER);*/
         
-        createGamePanel(this, grid, score, queue, 0);
-        createGamePanel(this, new Grid(), new Score(), new PieceQueue(), 3);
+        grids = new Grid[runtime.getNbPlayers()];
+        scores = new Score[runtime.getNbPlayers()];
+        queues = new PieceQueue[runtime.getNbPlayers()];
+        
+        for(int i = 0; i < runtime.getNbPlayers(); i++)
+        {
+            grids[i] = new Grid();
+            scores[i] = new Score();
+            queues[i] = new PieceQueue();
+            
+            createGamePanel(this, grids[i], scores[i], queues[i], 3 * (i % nbPerLine), 3 * (i / nbPerLine));
+        }
         
         bgSound = new Sound("H:\\ProjetInfo\\Images\\bsound.mp3");
         bgSound.setLoop();
     }
     
-    private void createGamePanel(Container cont, Grid grid, Score score, PieceQueue queue, int x_offset)
+    private void createGamePanel(Container cont, Grid grid, Score score, PieceQueue queue, int x_offset, int y_offset)
     {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -122,14 +160,14 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         
         grid.setSize(400, 100);
         c.gridx = 1 + x_offset;
-        c.gridy = 0;
+        c.gridy = 0 + y_offset;
         c.gridheight = 3;
         c.weighty = 1.0;
         c.weightx = 0.6;
         cont.add(grid, c);
         
         c.gridx = 2 + x_offset;
-        c.gridy = 2;
+        c.gridy = 2 + y_offset;
         c.gridheight = 1;
         c.weighty = 0.1;
         c.weightx = 0.1;
@@ -137,7 +175,7 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         
         queue.setSize(100, 0);
         c.gridx = 0 + x_offset;
-        c.gridy = 0;
+        c.gridy = 0 + y_offset;
         c.gridheight = 1;
         c.weighty = 0.9;
         c.weightx = 0.3;
@@ -162,7 +200,8 @@ public class GameWindow extends JFrame implements KeyListener, Observer
     
     public void setObservers()
     {
-        runtime.setObservers(grid, score, queue, this);
+        for(int i = 0; i < runtime.getNbPlayers(); i++)
+            runtime.addObservers(i, grids[i], scores[i], queues[i]);
     }
     
     public void shown()
@@ -174,14 +213,14 @@ public class GameWindow extends JFrame implements KeyListener, Observer
     @Override
     public void update(Observable o, Object arg)
     {
-        if(arg instanceof modele.Runtime.TerminatedEventArg)
+        if(arg instanceof modele.general.TimedRuntime.TerminatedEventArg)
         {
             bgSound.stop();
             return;
         }
-        if(arg instanceof modele.Runtime.PauseResumeEventArg)
+        if(arg instanceof modele.general.TimedRuntime.PauseResumeEventArg)
         {
-            modele.Runtime.PauseResumeEventArg argv = (modele.Runtime.PauseResumeEventArg)arg;
+            modele.general.TimedRuntime.PauseResumeEventArg argv = (modele.general.TimedRuntime.PauseResumeEventArg)arg;
             
             if(argv.getPause())
                 bgSound.pause();
@@ -201,44 +240,45 @@ public class GameWindow extends JFrame implements KeyListener, Observer
     @Override
     public void keyPressed(KeyEvent e)
     {
-        switch(e.getKeyCode())
-        {
-            // Left
-            case 81: // Q
-                runtime.MoveLeft();
-                break;
-                
-            // Right
-            case 68: // D
-                runtime.MoveRight();
-                break;
-                
-            // Direct bottom
-            case 83: // S
-                runtime.PushBottom();
-                break;
-            
-            // Rotate
-            case 32: // Space
-                runtime.Rotate();
-                break;
-            
-            // Show/Hide menu
-            case 27: // Escape
-                runtime.Pause();
-                //runtime.Resume();
-                break;
-            
-            // Pause/Resume
-            case 80: // P
-                runtime.PauseResume();
-                break;
-            
-            default:
-                if(System.getProperty("Debug") != null)
-                    System.out.println("KeyCode [" + e.getKeyChar() + " : " + e.getKeyCode() + "]");
-                break;
-        }
+        for(int cmd = 0; cmd < keysGeneral.length; cmd++)
+            if(keysGeneral[cmd] == e.getKeyCode())
+                switch(cmd)
+                {
+                    case 0:
+                        for(TetrisRuntime r : runtime.getRuntime())
+                            r.Pause();
+                        return;
+
+                    case 1:
+                        for(TetrisRuntime r : runtime.getRuntime())
+                            r.PauseResume();
+                        return;
+                }
+        
+        for(int player = 0; player < keysMap.length; player++)
+            for(int cmd = 0; cmd < keysMap[player].length; cmd++)
+                if(keysMap[player][cmd] == e.getKeyCode())
+                    switch(cmd)
+                    {
+                        case 0:
+                            runtime.getRuntime(player).MoveLeft();
+                            return;
+                            
+                        case 1:
+                            runtime.getRuntime(player).MoveRight();
+                            return;
+                            
+                        case 2:
+                            runtime.getRuntime(player).PushBottom();
+                            return;
+                            
+                        case 3:
+                            runtime.getRuntime(player).Rotate();
+                            return;
+                    }
+        
+        if(System.getProperty("Debug") != null)
+            System.out.println("KeyCode [" + e.getKeyChar() + " : " + e.getKeyCode() + "]");
     }
 
     @Override

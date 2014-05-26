@@ -6,6 +6,7 @@
 
 package modele;
 
+import modele.general.Event;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,12 +19,12 @@ import java.util.logging.Logger;
  *
  * @author p1002239
  */
-public class RuntimeSolo extends Runtime
-{
+public class RuntimeA/* extends Observable implements Runnable*/
+{/*
     private static final int START_TIME = 1000; // ms
     private static final int DECREMENT_TIME = 100; // ms
     
-    public RuntimeSolo()
+    public RuntimeA()
     {
         Piece.setDefaultPosition(new Point(Grid.MAX_W / 2, 0));
         
@@ -236,5 +237,5 @@ public class RuntimeSolo extends Runtime
             return value;
         }
     }
-    //</editor-fold>
+    //</editor-fold>*/
 }

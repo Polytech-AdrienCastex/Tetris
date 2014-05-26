@@ -53,6 +53,7 @@ public class Sound
     {
         if(mediaPlayer != null)
         {
+            mediaPlayer.seek(Duration.ZERO);
             mediaPlayer.play();
             return;
         }
