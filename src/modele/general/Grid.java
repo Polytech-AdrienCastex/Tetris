@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.general;
 
 import modele.general.Event;
 import java.awt.Color;
@@ -20,6 +20,7 @@ public class Grid extends Observable
     public static final int MAX_W = 15;
     public static final int MAX_H = 15;
     public static final Color DEFAULT_COLOR = new Color(10, 10, 10);
+    public static final Color DEAD_LINE_COLOR = Color.GRAY;
     
     public Grid()
     {
@@ -49,21 +50,27 @@ public class Grid extends Observable
     }
     private int setPiece(Piece p, Color[][] cases)
     {
-        Point pos = p.getPosition();
-        Point size = p.getSize();
-        
-        for(int x = 0; x < size.x; x++)
-            for(int y = 0; y < size.y; y++)
-                if(p.getCase(x, y))
-                    cases[pos.x + x][pos.y + y] = p.getColor();
-        
-        super.setChanged();
-        super.notifyObservers(new GridChangedEventArg(this, cases, cases == this.cases_persistent));
-        
-        return getScore(cases);
+        synchronized(cases_persistent)
+        {
+            Point pos = p.getPosition();
+            Point size = p.getSize();
+
+            for(int x = 0; x < size.x; x++)
+                for(int y = 0; y < size.y; y++)
+                    if(p.getCase(x, y))
+                        cases[pos.x + x][pos.y + y] = p.getColor();
+
+            super.setChanged();
+            super.notifyObservers(new GridChangedEventArg(this, cases, cases == this.cases_persistent));
+
+            return getScore(cases);
+        }
     }
     private boolean isFullLine(Color[][] cases, int offset)
     {
+        if(cases[0][offset] == DEAD_LINE_COLOR)
+            return false;
+        
         for(int x = 0; x < MAX_W; x++)
             if(cases[x][offset] == DEFAULT_COLOR)
                 return false;

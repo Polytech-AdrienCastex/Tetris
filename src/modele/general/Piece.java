@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.general;
 
 import java.awt.Color;
 import java.awt.Point;

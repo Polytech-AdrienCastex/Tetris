@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author p1002239
  */
-public class RuntimeManagerSolo<T extends TimedRuntime> extends RuntimeManagerMulti<T>
+public class RuntimeManagerSolo<T extends Runtime> extends RuntimeManagerMulti<T>
 {
     public RuntimeManagerSolo(Class<T> c)
     {

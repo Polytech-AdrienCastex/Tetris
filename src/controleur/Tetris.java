@@ -6,8 +6,8 @@
 
 package controleur;
 
-import modele.Grid;
-import modele.TetrisRuntime;
+import modele.general.Grid;
+import modele.tetris.TetrisRuntime;
 import modele.general.RuntimeManagerMulti;
 import modele.general.RuntimeManagerSolo;
 import vue.GameWindow;

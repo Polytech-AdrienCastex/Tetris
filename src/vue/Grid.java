@@ -14,7 +14,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import modele.Piece;
+import modele.general.Piece;
 
 /**
  *
@@ -26,15 +26,15 @@ public class Grid extends HiddenPanel implements Observer
     {
         super();
         
-        GridLayout layout = new GridLayout(modele.Grid.MAX_H, modele.Grid.MAX_W);
+        GridLayout layout = new GridLayout(modele.general.Grid.MAX_H, modele.general.Grid.MAX_W);
         super.setLayout(layout);
         
         layout.setHgap(1);
         layout.setVgap(1);
         
-        this.cases = new Case[modele.Grid.MAX_H][modele.Grid.MAX_W];
-        for(int y = 0; y < modele.Grid.MAX_W; y++)
-            for(int x = 0; x < modele.Grid.MAX_H; x++)
+        this.cases = new Case[modele.general.Grid.MAX_H][modele.general.Grid.MAX_W];
+        for(int y = 0; y < modele.general.Grid.MAX_W; y++)
+            for(int x = 0; x < modele.general.Grid.MAX_H; x++)
             {
                 Case elem = new Case();
                 this.add(elem);
@@ -59,9 +59,9 @@ public class Grid extends HiddenPanel implements Observer
     @Override
     public void update(Observable obs, Object obj)
     {
-        if(obj instanceof modele.Grid.GridChangedEventArg)
+        if(obj instanceof modele.general.Grid.GridChangedEventArg)
         {
-            modele.Grid.GridChangedEventArg gridArg = (modele.Grid.GridChangedEventArg)obj;
+            modele.general.Grid.GridChangedEventArg gridArg = (modele.general.Grid.GridChangedEventArg)obj;
             
             if(gridArg.isPersistent())
             {
@@ -71,8 +71,8 @@ public class Grid extends HiddenPanel implements Observer
             
             Color[][] colors = gridArg.getCases();
             
-            for(int x = 0; x < modele.Grid.MAX_W; x++)
-                for(int y = 0; y < modele.Grid.MAX_H; y++)
+            for(int x = 0; x < modele.general.Grid.MAX_W; x++)
+                for(int y = 0; y < modele.general.Grid.MAX_H; y++)
                     cases[x][y].setColor(colors[x][y]);
             
             
@@ -82,9 +82,9 @@ public class Grid extends HiddenPanel implements Observer
         
         if(obj instanceof modele.general.TimedRuntime.TerminatedEventArg)
         {
-            for(int x = 0; x < modele.Grid.MAX_W; x++)
-                for(int y = 0; y < modele.Grid.MAX_H; y++)
-                    if(cases[x][y].getColor() != modele.Grid.DEFAULT_COLOR)
+            for(int x = 0; x < modele.general.Grid.MAX_W; x++)
+                for(int y = 0; y < modele.general.Grid.MAX_H; y++)
+                    if(cases[x][y].getColor() != modele.general.Grid.DEFAULT_COLOR)
                         cases[x][y].setColor(Color.GRAY);
             
             this.getParent().repaint();

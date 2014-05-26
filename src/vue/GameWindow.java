@@ -32,8 +32,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import modele.general.RuntimeManagerMulti;
-import modele.TetrisRuntime;
+import modele.general.RuntimeManager;
+import modele.tetris.TetrisRuntime;
 
 /**
  *
@@ -41,11 +41,11 @@ import modele.TetrisRuntime;
  */
 public class GameWindow extends JFrame implements KeyListener, Observer
 {
-    public GameWindow(RuntimeManagerMulti runtime)
+    public GameWindow(RuntimeManager runtime)
     {
         this(runtime, 5);
     }
-    public GameWindow(RuntimeManagerMulti runtime, int nbPerLine)
+    public GameWindow(RuntimeManager runtime, int nbPerLine)
     {
         super();
         
@@ -88,7 +88,7 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         }
     };
     
-    private RuntimeManagerMulti<TetrisRuntime> runtime;
+    private RuntimeManager<TetrisRuntime> runtime;
     
     private void build(int nbPerLine)
     {

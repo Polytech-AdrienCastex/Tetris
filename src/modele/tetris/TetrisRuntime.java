@@ -4,11 +4,16 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.tetris;
 
-import modele.general.TimedRuntime;
 import java.awt.Point;
 import java.util.Observer;
+import modele.general.Grid;
+import modele.general.Piece;
+import modele.general.PieceQueue;
+import modele.general.RuntimeManager;
+import modele.general.Score;
+import modele.general.TimedRuntime;
 
 /**
  *
@@ -24,7 +29,7 @@ public class TetrisRuntime extends TimedRuntime
         
         grid = new Grid();
         
-        queue = new PieceQueue<TetrisPiece>(TetrisPiece.class);
+        queue = new PieceQueue(TetrisPiece.class);
         currentPiece = queue.getNext();
         grid.setVolatilePiece(currentPiece);
         
@@ -62,17 +67,17 @@ public class TetrisRuntime extends TimedRuntime
     @Override
     protected boolean timeIncremented()
     {
-            currentPiece.moveDown();
-            if(grid.IsPossible(currentPiece))
-            {
-                grid.setVolatilePiece(currentPiece);
-                return false;
-            }
-            else
-            {
-                currentPiece.cancelLastMove();
-                return true;
-            }
+        currentPiece.moveDown();
+        if(grid.IsPossible(currentPiece))
+        {
+            grid.setVolatilePiece(currentPiece);
+            return false;
+        }
+        else
+        {
+            currentPiece.cancelLastMove();
+            return true;
+        }
     }
 
     @Override

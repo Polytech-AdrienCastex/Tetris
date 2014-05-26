@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.general;
 
+import modele.general.Piece;
 import modele.general.Event;
 import java.util.ArrayList;
 import java.util.Iterator;

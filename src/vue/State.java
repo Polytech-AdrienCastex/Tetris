@@ -86,9 +86,9 @@ public class State extends HiddenPanel implements Observer
     @Override
     public void update(Observable obs, Object obj)
     {
-        if(obj instanceof modele.Score.ScoreChangedEventArg)
+        if(obj instanceof modele.general.Score.ScoreChangedEventArg)
         {
-            modele.Score.ScoreChangedEventArg scoreArg = ((modele.Score.ScoreChangedEventArg)obj);
+            modele.general.Score.ScoreChangedEventArg scoreArg = ((modele.general.Score.ScoreChangedEventArg)obj);
             
             setScore(scoreArg.getScore(), scoreArg.getNb());
         }

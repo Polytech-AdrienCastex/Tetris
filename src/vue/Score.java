@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import modele.Score.ScoreChangedEventArg;
+import modele.general.Score.ScoreChangedEventArg;
 
 /**
  *

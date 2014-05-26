@@ -48,11 +48,11 @@ public class PieceQueue extends HiddenPanel implements Observer
     @Override
     public void update(Observable obs, Object obj)
     {
-        if(obj instanceof modele.PieceQueue.PieceQueueChangedEventArg)
+        if(obj instanceof modele.general.PieceQueue.PieceQueueChangedEventArg)
         {
-            modele.PieceQueue.PieceQueueChangedEventArg pqArg = (modele.PieceQueue.PieceQueueChangedEventArg)obj;
+            modele.general.PieceQueue.PieceQueueChangedEventArg pqArg = (modele.general.PieceQueue.PieceQueueChangedEventArg)obj;
             
-            Iterator<modele.Piece> pieces = pqArg.getPieces();
+            Iterator<modele.general.Piece> pieces = pqArg.getPieces();
             
             Point position = new Point(1, 1);
                 
@@ -63,7 +63,7 @@ public class PieceQueue extends HiddenPanel implements Observer
             int offset_x;
             while(pieces.hasNext())
             {
-                modele.Piece p = pieces.next();
+                modele.general.Piece p = pieces.next();
                 Point size = p.getSize();
                 
                 if(position.y + size.y > MAX_H)

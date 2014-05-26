@@ -6,14 +6,18 @@
 
 package modele.general;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Adrien
  */
-public abstract class TimedRuntime extends Observable implements Runnable
+public abstract class TimedRuntime extends Runtime
 {
     public TimedRuntime()
     { }
@@ -67,19 +71,16 @@ public abstract class TimedRuntime extends Observable implements Runnable
     
     
     //<editor-fold defaultstate="collapsed" desc="Abstract methods">
-    public abstract void setObservers(Observer[] obs);
-    
     protected abstract void initialize();
     protected abstract boolean timeIncremented(); // Returns true if acceleration is required and next step
     protected abstract boolean checkTerminated();
     protected abstract void nextStep();
-    protected abstract void terminedGame();
+    protected abstract void terminedGame(); 
     protected abstract void uninitialize();
     protected abstract void error();
     //</editor-fold>
     
     
-    @Override
     public void run()
     {
         new Thread(new Runnable()
@@ -198,6 +199,13 @@ public abstract class TimedRuntime extends Observable implements Runnable
         public boolean getPause()
         {
             return value;
+        }
+    }
+    public class StepOverEventArg extends Event
+    {
+        public StepOverEventArg(Object sender)
+        {
+            super(sender);
         }
     }
     //</editor-fold>

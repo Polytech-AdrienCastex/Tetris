@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package modele;
+package modele.tetris;
 
+import modele.general.Piece;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;

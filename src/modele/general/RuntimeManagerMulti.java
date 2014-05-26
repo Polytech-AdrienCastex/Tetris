@@ -6,6 +6,8 @@
 
 package modele.general;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -15,43 +17,47 @@ import java.util.logging.Logger;
  *
  * @author Adrien
  */
-public class RuntimeManagerMulti<T extends TimedRuntime> implements Runnable
+public class RuntimeManagerMulti<T extends Runtime> implements RuntimeManager
 {
     public RuntimeManagerMulti(int nb_players, Class<T> c)
     {
         try
         {
-            runtimes = new TimedRuntime[nb_players];
+            runtimes = (T[])Array.newInstance(c, nb_players);
             
             for(int i = 0; i < nb_players; i++)
                 runtimes[i] = c.newInstance();
-                //runtimes[i] = new TetrisRuntime();
         }
         catch (InstantiationException | IllegalAccessException ex)
         { }
     }
     
-    private TimedRuntime[] runtimes;
+    private T[] runtimes;
     
+    @Override
     public int getNbPlayers()
     {
         return runtimes.length;
     }
     
+    @Override
     public void addObservers(Observer... o)
     {
-        for(TimedRuntime r : runtimes)
+        for(Runtime r : runtimes)
             r.setObservers(o);
     }
+    @Override
     public void addObservers(int player, Observer... o)
     {
         runtimes[player].setObservers(o);
     }
     
+    @Override
     public T getRuntime(int player)
     {
         return (T)runtimes[player];
     }
+    @Override
     public T[] getRuntime()
     {
         return (T[])runtimes;
@@ -60,7 +66,7 @@ public class RuntimeManagerMulti<T extends TimedRuntime> implements Runnable
     @Override
     public void run()
     {
-        for(TimedRuntime r : runtimes)
+        for(Runtime r : runtimes)
             r.run();
     }
 }
