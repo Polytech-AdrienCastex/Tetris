@@ -6,35 +6,27 @@
 
 package vue;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.RenderingHints;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import modele.Score.ScoreChangedEventArg;
 
 /**
  *
  * @author Adrien
  */
-public class Score extends HiddenPanel implements Observer
+public class State extends HiddenPanel implements Observer
 {
     private static final Color FORE_COLOR = Color.MAGENTA;
     
-    public Score()
+    public State()
     {
         super();
         super.setLayout(new BorderLayout(0, 0));
@@ -48,18 +40,11 @@ public class Score extends HiddenPanel implements Observer
         
         createCenteredPanel(panel, BorderLayout.CENTER).add(scoreLabel);
         
-        nbLabel = new JLabel();
-        nbLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nbLabel.setFont(new Font(nbLabel.getFont().getName(), Font.BOLD, 15));
-        nbLabel.setForeground(FORE_COLOR);
-        
-        createCenteredPanel(panel, BorderLayout.SOUTH).add(nbLabel);
-        
         
         
         this.setBorder(BorderFactory.createCompoundBorder(
-                new EmptyBorder(10, 10, 0, 10),
-                BorderFactory.createMatteBorder(7, 7, 0, 7, FORE_COLOR)));
+                new EmptyBorder(0, 10, 10, 10),
+                BorderFactory.createMatteBorder(0, 7, 7, 7, FORE_COLOR)));
         
         sound = new Sound("H:\\ProjetInfo\\Images\\douing.wav");
     }
@@ -101,9 +86,9 @@ public class Score extends HiddenPanel implements Observer
     @Override
     public void update(Observable obs, Object obj)
     {
-        if(obj instanceof ScoreChangedEventArg)
+        if(obj instanceof modele.Score.ScoreChangedEventArg)
         {
-            ScoreChangedEventArg scoreArg = ((ScoreChangedEventArg)obj);
+            modele.Score.ScoreChangedEventArg scoreArg = ((modele.Score.ScoreChangedEventArg)obj);
             
             setScore(scoreArg.getScore(), scoreArg.getNb());
         }

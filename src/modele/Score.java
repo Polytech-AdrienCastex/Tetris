@@ -23,10 +23,13 @@ public class Score extends Observable
     private int nb;
     private void setScore(int value)
     {
-        score = value;
-        
-        super.setChanged();
-        super.notifyObservers(new ScoreChangedEventArg(score, nb));
+        if(score != value)
+        {
+            score = value;
+
+            super.setChanged();
+            super.notifyObservers(new ScoreChangedEventArg(this, score, nb));
+        }
     }
     
     public void addScore(int value)
@@ -40,17 +43,26 @@ public class Score extends Observable
         }
     }
     
+    public int getScore()
+    {
+        return score;
+    }
+    
     public void reset()
     {
         nb = 0;
-        setScore(0);
+        score = 0;
+        
+        super.setChanged();
+        super.notifyObservers(new ScoreChangedEventArg(this, score, nb));
     }
     
-    //<editor-fold desc="Events">
-    public class ScoreChangedEventArg
+    //<editor-fold defaultstate="collapsed" desc="Events">
+    public class ScoreChangedEventArg extends Event
     {
-        public ScoreChangedEventArg(int score, int nb)
+        public ScoreChangedEventArg(Object sender, int score, int nb)
         {
+            super(sender);
             this.score = score;
             this.nb = nb;
         }

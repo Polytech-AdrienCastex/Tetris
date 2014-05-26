@@ -43,7 +43,12 @@ public class Grid extends HiddenPanel implements Observer
         
         this.setBackground(Color.black);
         this.setBorder(BorderFactory.createMatteBorder(0, 7, 0, 7, Color.magenta));
+        
+        sound = new Sound("H:\\ProjetInfo\\Images\\boup.wav");
     }
+    
+    private Sound sound;
+    
     private Case[][] cases;
     
     public Case getCase(int x, int y)
@@ -61,15 +66,29 @@ public class Grid extends HiddenPanel implements Observer
             if(gridArg.isPersistent())
             {
                 // Son
+                sound.play();
             }
             
             Color[][] colors = gridArg.getCases();
             
             for(int x = 0; x < modele.Grid.MAX_W; x++)
                 for(int y = 0; y < modele.Grid.MAX_H; y++)
-                    cases[x][y].SetColor(colors[x][y]);
+                    cases[x][y].setColor(colors[x][y]);
+            
             
             this.getParent().repaint();
+            return;
+        }
+        
+        if(obj instanceof modele.Runtime.TerminatedEventArg)
+        {
+            for(int x = 0; x < modele.Grid.MAX_W; x++)
+                for(int y = 0; y < modele.Grid.MAX_H; y++)
+                    if(cases[x][y].getColor() != modele.Grid.DEFAULT_COLOR)
+                        cases[x][y].setColor(Color.GRAY);
+            
+            this.getParent().repaint();
+            return;
         }
     }
     

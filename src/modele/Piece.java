@@ -159,7 +159,7 @@ public class Piece
         return matrix[x][y];
     }
     
-    //<editor-fold desc="Move">
+    //<editor-fold defaultstate="collapsed" desc="Move">
     public void moveLeft()
     {
         setPosition(new Point(
@@ -194,7 +194,7 @@ public class Piece
     }
     //</editor-fold>
     
-    //<editor-fold desc="Rotate">
+    //<editor-fold defaultstate="collapsed" desc="Rotate">
     private boolean isLastRotateLeft = false;
     public void rotateLeft90()
     {

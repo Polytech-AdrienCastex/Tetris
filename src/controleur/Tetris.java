@@ -7,7 +7,7 @@
 package controleur;
 
 import modele.Grid;
-import vue.FenetrePrincipale;
+import vue.GameWindow;
 import modele.Runtime;
 
 /**
@@ -19,8 +19,10 @@ public class Tetris
 
     public static void main(String[] args)
     {
+        System.setProperty("Debug", "true");
+        
         Runtime runtime = new Runtime();
-        FenetrePrincipale fenetre = new FenetrePrincipale(runtime);
+        GameWindow fenetre = new GameWindow(runtime);
         
         fenetre.setVisible(true);
         runtime.run();

@@ -57,7 +57,7 @@ public class Grid extends Observable
                     cases[pos.x + x][pos.y + y] = p.getColor();
         
         super.setChanged();
-        super.notifyObservers(new GridChangedEventArg(cases, cases == this.cases_persistent));
+        super.notifyObservers(new GridChangedEventArg(this, cases, cases == this.cases_persistent));
         
         return getScore(cases);
     }
@@ -136,11 +136,12 @@ public class Grid extends Observable
     
     
     
-    //<editor-fold desc="Events">
-    public class GridChangedEventArg
+    //<editor-fold defaultstate="collapsed" desc="Events">
+    public class GridChangedEventArg extends Event
     {
-        public GridChangedEventArg(Color[][] cases, boolean isPersistent)
+        public GridChangedEventArg(Object sender, Color[][] cases, boolean isPersistent)
         {
+            super(sender);
             this._cases = cases;
             this._isPersistent = isPersistent;
         }

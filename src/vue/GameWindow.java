@@ -7,10 +7,8 @@
 package vue;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,41 +17,30 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.JSplitPane;
 import modele.Runtime;
 
 /**
  *
  * @author p1002239
  */
-public class FenetrePrincipale extends JFrame implements KeyListener
+public class GameWindow extends JFrame implements KeyListener, Observer
 {
-    private static Color BG_COLOR = Color.BLACK;
-    
-    public FenetrePrincipale(Runtime runtime)
+    public GameWindow(Runtime runtime)
     {
         super();
         
@@ -65,10 +52,13 @@ public class FenetrePrincipale extends JFrame implements KeyListener
         
         setObservers();
         
+        shown();
     }
     private Grid grid;
     private Score score;
     private PieceQueue queue;
+    
+    private Sound bgSound;
     
     private Runtime runtime;
     
@@ -80,74 +70,80 @@ public class FenetrePrincipale extends JFrame implements KeyListener
         ImagePanel img = new ImagePanel("H:\\ProjetInfo\\Images\\TetrisBg.jpg");
         this.setContentPane(img);
         
-        //setLayout(new BorderLayout());
-        setLayout(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
+        grid = new Grid();
+        score = new Score();
+        queue = new PieceQueue();
+        /*
+        JPanel panel_1 = new JPanel();
+        JPanel panel_2 = new JPanel();
+        JPanel panel_3 = new JPanel();
+        panel_3.setSize(0, 0);
+        
+        createGamePanel(panel_1, grid, score, queue);
+        createGamePanel(panel_2, new Grid(), new Score(), new PieceQueue());
+        
+        this.add(panel_1, BorderLayout.WEST);
+        this.add(panel_2, BorderLayout.EAST);
+        this.add(panel_3, BorderLayout.CENTER);*/
+        
+        createGamePanel(this, grid, score, queue, 0);
+        createGamePanel(this, new Grid(), new Score(), new PieceQueue(), 3);
+        
+        bgSound = new Sound("H:\\ProjetInfo\\Images\\bsound.mp3");
+        bgSound.setLoop();
+    }
+    
+    private void createGamePanel(Container cont, Grid grid, Score score, PieceQueue queue, int x_offset)
+    {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         c.weighty = 1.0;
         c.weightx = 1.0;
-
         
-        grid = new Grid();
+        /*
+        JPanel state = new State();
+        c.gridx = 2;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.weighty = 0.1;
+        c.weightx = 0.1;
+        this.add(state, c);
+        
+        JPanel panel = new HiddenPanel();
+        panel.setSize(400, 100);
+        c.gridx = 2;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.weighty = 0.8;
+        c.weightx = 0.1;
+        this.add(panel, c);
+        */
+        
         grid.setSize(400, 100);
-        c.gridx = 1;
+        c.gridx = 1 + x_offset;
         c.gridy = 0;
         c.gridheight = 3;
         c.weighty = 1.0;
         c.weightx = 0.6;
-        this.add(grid, c);
+        cont.add(grid, c);
         
-        score = new Score();
-        c.gridx = 2;
+        c.gridx = 2 + x_offset;
         c.gridy = 2;
         c.gridheight = 1;
         c.weighty = 0.1;
         c.weightx = 0.1;
-        this.add(score, c);
+        cont.add(score, c);
         
-        queue = new PieceQueue();
         queue.setSize(100, 0);
-        c.gridx = 0;
+        c.gridx = 0 + x_offset;
         c.gridy = 0;
+        c.gridheight = 1;
         c.weighty = 0.9;
         c.weightx = 0.3;
-        this.add(queue, c);
-        
-        playSound("bsound.mp3");
+        cont.add(queue, c);
     }
     
-    public static synchronized void playSound(final String url) {
-    new Thread(new Runnable() {
-    // The wrapper thread is unnecessary, unless it blocks on the
-    // Clip finishing; see comments.
-      public void run() {
-        try {
-            new JFXPanel();
-            
-            String fullUrl = "file:///" + new File(url).getAbsolutePath();
-            fullUrl = Paths.get(new File(url).getAbsolutePath()).toUri().toString();
-            System.out.println(fullUrl);
-            
-            Media hit = new Media(fullUrl);
-            MediaPlayer mediaPlayer = new MediaPlayer(hit);
-            mediaPlayer.play();
-            
-            /*
-            System.out.print("1");
-          Clip clip = AudioSystem.getClip();
-            System.out.print("2");
-            FileInputStream s = new FileInputStream(url);
-            System.out.print("3");
-          AudioInputStream inputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(s));
-            System.out.print("4");
-          clip.open(inputStream);
-          clip.start(); */
-        } catch (Exception e) {
-          System.err.println(e.getMessage());
-        }
-      }
-    }).start();
-  }
     
     private void addListeners()
     {
@@ -166,36 +162,38 @@ public class FenetrePrincipale extends JFrame implements KeyListener
     
     public void setObservers()
     {
-        runtime.setObservers(grid, score, queue);
+        runtime.setObservers(grid, score, queue, this);
     }
     
-    class ImagePanel extends JComponent
+    public void shown()
     {
-        public ImagePanel(String image)
+        bgSound.play();
+        bgSound.setVolume(0.1);
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        if(arg instanceof modele.Runtime.TerminatedEventArg)
         {
-            try
-            {
-                this.image = ImageIO.read(new File(image));
-            }
-            catch (IOException ex)
-            {
-                this.image = null;
-            }
+            bgSound.stop();
+            return;
         }
-        private Image image;
-        
-        @Override
-        protected void paintComponent(Graphics g)
+        if(arg instanceof modele.Runtime.PauseResumeEventArg)
         {
-            if(this.image != null)
-                g.drawImage(image, 0, 0, null);
+            modele.Runtime.PauseResumeEventArg argv = (modele.Runtime.PauseResumeEventArg)arg;
             
-            super.paintComponent(g);
+            if(argv.getPause())
+                bgSound.pause();
+            else
+                bgSound.resume();
+            
+            return;
         }
     }
     
     
-    //<editor-fold desc="Keys">
+    //<editor-fold defaultstate="collapsed" desc="Keys">
     @Override
     public void keyTyped(KeyEvent e)
     { }
@@ -231,7 +229,14 @@ public class FenetrePrincipale extends JFrame implements KeyListener
                 //runtime.Resume();
                 break;
             
+            // Pause/Resume
+            case 80: // P
+                runtime.PauseResume();
+                break;
+            
             default:
+                if(System.getProperty("Debug") != null)
+                    System.out.println("KeyCode [" + e.getKeyChar() + " : " + e.getKeyCode() + "]");
                 break;
         }
     }

@@ -36,7 +36,7 @@ public class PieceQueue extends Observable
         insertNew();
         
         super.setChanged();
-        super.notifyObservers(new CurrentPieceChangedEventArg(p));
+        super.notifyObservers(new CurrentPieceChangedEventArg(this, p));
         
         return p;
     }
@@ -52,7 +52,7 @@ public class PieceQueue extends Observable
         pieces.add(p);
         
         super.setChanged();
-        super.notifyObservers(new PieceQueueChangedEventArg(pieces.iterator()));
+        super.notifyObservers(new PieceQueueChangedEventArg(this, pieces.iterator()));
     }
     
     @Override
@@ -61,17 +61,18 @@ public class PieceQueue extends Observable
         super.addObserver(o);
         
         super.setChanged();
-        super.notifyObservers(new CurrentPieceChangedEventArg(pieces.peek()));
+        super.notifyObservers(new CurrentPieceChangedEventArg(this, pieces.peek()));
         
         super.setChanged();
-        super.notifyObservers(new PieceQueueChangedEventArg(pieces.iterator()));
+        super.notifyObservers(new PieceQueueChangedEventArg(this, pieces.iterator()));
     }
     
-    //<editor-fold desc="Events">
-    public class CurrentPieceChangedEventArg
+    //<editor-fold defaultstate="collapsed" desc="Events">
+    public class CurrentPieceChangedEventArg extends Event
     {
-        public CurrentPieceChangedEventArg(Piece piece)
+        public CurrentPieceChangedEventArg(Object sender, Piece piece)
         {
+            super(sender);
             this.piece = piece;
         }
         
@@ -81,10 +82,11 @@ public class PieceQueue extends Observable
             return piece;
         }
     }
-    public class PieceQueueChangedEventArg
+    public class PieceQueueChangedEventArg extends Event
     {
-        public PieceQueueChangedEventArg(Iterator<Piece> pieces)
+        public PieceQueueChangedEventArg(Object sender, Iterator<Piece> pieces)
         {
+            super(sender);
             this.pieces = pieces;
         }
         

@@ -18,12 +18,12 @@ import java.util.logging.Logger;
  *
  * @author p1002239
  */
-public class Runtime extends Observable implements Runnable
+public class RuntimeSolo extends Runtime
 {
     private static final int START_TIME = 1000; // ms
     private static final int DECREMENT_TIME = 100; // ms
     
-    public Runtime()
+    public RuntimeSolo()
     {
         Piece.setDefaultPosition(new Point(Grid.MAX_W / 2, 0));
         

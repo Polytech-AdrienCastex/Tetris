@@ -37,7 +37,7 @@ public class PieceQueue extends HiddenPanel implements Observer
             for(int y = 0; y < MAX_W; y++)
             {
                 Case elem = new Case();
-                elem.SetColor(TRANSPARENT_BG_COLOR);
+                elem.setColor(TRANSPARENT_BG_COLOR);
                 this.add(elem);
                 this.cases[x][y] = elem;
             }
@@ -58,7 +58,7 @@ public class PieceQueue extends HiddenPanel implements Observer
                 
             for(int x = 0; x < MAX_H; x++)
                 for(int y = 0; y < MAX_W; y++)
-                    this.cases[x][y].SetColor(TRANSPARENT_BG_COLOR);
+                    this.cases[x][y].setColor(TRANSPARENT_BG_COLOR);
             
             int offset_x;
             while(pieces.hasNext())
@@ -76,15 +76,27 @@ public class PieceQueue extends HiddenPanel implements Observer
                     {
                         Case selectedCase = this.cases[position.y + y][position.x + x + offset_x];
                         if(p.getCase(x, y))
-                            selectedCase.SetColor(p.getColor());
+                            selectedCase.setColor(p.getColor());
                         else
-                            selectedCase.SetColor(TRANSPARENT_BG_COLOR);
+                            selectedCase.setColor(TRANSPARENT_BG_COLOR);
                     }
                 
                 position = new Point(position.x, position.y + size.y + 1);
             }
             
             this.getParent().repaint();
+            return;
+        }
+        
+        if(obj instanceof modele.Runtime.TerminatedEventArg)
+        {
+            for(int x = 0; x < MAX_H; x++)
+                for(int y = 0; y < MAX_W; y++)
+                    if(cases[x][y].getColor() != TRANSPARENT_BG_COLOR)
+                        cases[x][y].setColor(Color.GRAY);
+            
+            this.getParent().repaint();
+            return;
         }
     }
 }

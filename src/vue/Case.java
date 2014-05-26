@@ -25,8 +25,12 @@ public class Case extends JPanel
         super.setBackground(Color.WHITE);
     }
     
-    public void SetColor(Color color)
+    public void setColor(Color color)
     {
         super.setBackground(color);
+    }
+    public Color getColor()
+    {
+        return super.getBackground();
     }
 }
