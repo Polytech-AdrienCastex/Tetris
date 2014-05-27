@@ -85,7 +85,7 @@ public class Score extends HiddenPanel implements Observer
     private void setScore(int value)
     {
         scoreLabel.setText("Score : " + value);
-        nbLabel.setText("Ligne : 0");
+        nbLabel.setText("Coups : 0");
     }
     private void setScore(int value, int nb)
     {
@@ -95,7 +95,7 @@ public class Score extends HiddenPanel implements Observer
         }
         
         scoreLabel.setText("Score : " + value);
-        nbLabel.setText("Ligne" + (nb > 1 ? "s" : "") + " : " + nb);
+        nbLabel.setText("Coups" + (nb > 1 ? "s" : "") + " : " + nb);
     }
 
     @Override
