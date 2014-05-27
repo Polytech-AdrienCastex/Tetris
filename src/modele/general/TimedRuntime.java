@@ -6,13 +6,6 @@
 
 package modele.general;
 
-import java.time.Instant;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Adrien
@@ -199,13 +192,6 @@ public abstract class TimedRuntime extends Runtime
         public boolean getPause()
         {
             return value;
-        }
-    }
-    public class StepOverEventArg extends Event
-    {
-        public StepOverEventArg(Object sender)
-        {
-            super(sender);
         }
     }
     //</editor-fold>

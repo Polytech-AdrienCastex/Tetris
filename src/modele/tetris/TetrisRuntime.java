@@ -27,7 +27,7 @@ public class TetrisRuntime extends TimedRuntime
         
         Piece.setDefaultPosition(new Point(Grid.MAX_W / 2, 0));
         
-        grid = new Grid();
+        grid = new TetrisGrid();
         
         queue = new PieceQueue(TetrisPiece.class);
         currentPiece = queue.getNext();

@@ -6,32 +6,21 @@
 
 package vue;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javax.imageio.ImageIO;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import modele.general.RuntimeManager;
 import modele.tetris.TetrisRuntime;
 
@@ -39,7 +28,7 @@ import modele.tetris.TetrisRuntime;
  *
  * @author p1002239
  */
-public class GameWindow extends JFrame implements KeyListener, Observer
+public class GameWindow extends JFrame implements KeyListener, MenuListener, Observer
 {
     public GameWindow(RuntimeManager runtime)
     {
@@ -96,24 +85,13 @@ public class GameWindow extends JFrame implements KeyListener, Observer
         int x = runtime.getNbPlayers();
         if(x > nbPerLine)
             x = nbPerLine;
-        setSize(600 * x, 400 * (runtime.getNbPlayers() / nbPerLine + 1));
+        setSize(600 * x, 400 * (int)((runtime.getNbPlayers() + nbPerLine - 1) / nbPerLine));
         
-        ImagePanel img = new ImagePanel("H:\\ProjetInfo\\Images\\TetrisBg.jpg");
+        ImagePanel img = new ImagePanel("F:\\ProjetInfo\\Images\\TetrisBg.jpg");
         this.setContentPane(img);
-        
+
         this.setLayout(new GridBagLayout());
-        /*
-        JPanel panel_1 = new JPanel();
-        JPanel panel_2 = new JPanel();
-        JPanel panel_3 = new JPanel();
-        panel_3.setSize(0, 0);
         
-        createGamePanel(panel_1, grid, score, queue);
-        createGamePanel(panel_2, new Grid(), new Score(), new PieceQueue());
-        
-        this.add(panel_1, BorderLayout.WEST);
-        this.add(panel_2, BorderLayout.EAST);
-        this.add(panel_3, BorderLayout.CENTER);*/
         
         grids = new Grid[runtime.getNbPlayers()];
         scores = new Score[runtime.getNbPlayers()];
@@ -201,7 +179,7 @@ public class GameWindow extends JFrame implements KeyListener, Observer
     public void setObservers()
     {
         for(int i = 0; i < runtime.getNbPlayers(); i++)
-            runtime.addObservers(i, grids[i], scores[i], queues[i]);
+            runtime.addObservers(i, grids[i], scores[i], queues[i], this);
     }
     
     public void shown()
@@ -283,6 +261,22 @@ public class GameWindow extends JFrame implements KeyListener, Observer
 
     @Override
     public void keyReleased(KeyEvent e)
+    { }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Menu events">
+    @Override
+    public void menuSelected(MenuEvent me)
+    {
+        //System.out.println("AAA");
+    }
+
+    @Override
+    public void menuDeselected(MenuEvent me)
+    { }
+
+    @Override
+    public void menuCanceled(MenuEvent me)
     { }
     //</editor-fold>
 }

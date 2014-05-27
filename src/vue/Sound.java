@@ -8,10 +8,12 @@ package vue;
 
 import java.io.File;
 import java.nio.file.Paths;
+/*
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+*/
 
 /**
  *
@@ -31,7 +33,7 @@ public class Sound
     }
     
     
-    private static JFXPanel initComponent = null;
+    /*private static JFXPanel initComponent = null;
     private synchronized static void initialize()
     {
         if(initComponent == null)
@@ -47,10 +49,10 @@ public class Sound
             mediaPlayer = new MediaPlayer(hit);
         }
     }
-    
+    */
     private Thread currentThread = null;
     public synchronized void play() 
-    {
+    {/*
         if(mediaPlayer != null)
         {
             mediaPlayer.seek(Duration.ZERO);
@@ -85,21 +87,21 @@ public class Sound
             }
         });
         
-        currentThread.start();
+        currentThread.start();*/
     }
     
     private boolean _isLoop = false;
     public void setLoop()
-    {
+    {/*
         _isLoop = true;
         if(mediaPlayer != null)
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);*/
     }
     public void removeLoop()
-    {
+    {/*
         _isLoop = false;
         if(mediaPlayer != null)
-            mediaPlayer.setCycleCount(0);
+            mediaPlayer.setCycleCount(0);*/
     }
     public boolean isLoop()
     {
@@ -107,20 +109,20 @@ public class Sound
     }
     
     public void stop()
-    {
+    {/*
         if(mediaPlayer != null)
-            mediaPlayer.stop();
+            mediaPlayer.stop();*/
     }
     
     public void pause()
-    {
+    {/*
         if(mediaPlayer != null)
-            mediaPlayer.pause();
+            mediaPlayer.pause();*/
     }
     public void resume()
-    {
+    {/*
         if(mediaPlayer != null)
-            mediaPlayer.play();
+            mediaPlayer.play();*/
     }
     
     private double volume = 1f;
@@ -129,10 +131,10 @@ public class Sound
         return volume;
     }
     public void setVolume(double volume)
-    {
+    {/*
         this.volume = volume;
         if(mediaPlayer != null)
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(volume);*/
     }
     
     private double rate = 1f;
@@ -141,14 +143,14 @@ public class Sound
         return rate;
     }
     public void setRate(double rate)
-    {
+    {/*
         this.rate = rate;
         if(mediaPlayer != null)
-            mediaPlayer.setRate(rate);
+            mediaPlayer.setRate(rate);*/
     }
     
     public void waitForEnd() throws InterruptedException
-    {
+    {/*
         if(mediaPlayer == null)
             return;
         
@@ -159,6 +161,6 @@ public class Sound
         catch(InterruptedException ex)
         {
             mediaPlayer.stop();
-        }
+        }*/
     }
 }

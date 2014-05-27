@@ -15,7 +15,7 @@ import java.util.Observable;
  *
  * @author p1002239
  */
-public class Grid extends Observable
+public abstract class Grid extends Observable
 {
     public static final int MAX_W = 15;
     public static final int MAX_H = 15;
@@ -32,6 +32,9 @@ public class Grid extends Observable
             for(int y = 0; y < MAX_H; y++)
                 this.cases_persistent[x][y] = DEFAULT_COLOR;
     }
+    
+    protected abstract int getScore(Color[][] cases);
+    
     
     private final Color[][] cases_persistent;
     
@@ -65,42 +68,6 @@ public class Grid extends Observable
 
             return getScore(cases);
         }
-    }
-    private boolean isFullLine(Color[][] cases, int offset)
-    {
-        if(cases[0][offset] == DEAD_LINE_COLOR)
-            return false;
-        
-        for(int x = 0; x < MAX_W; x++)
-            if(cases[x][offset] == DEFAULT_COLOR)
-                return false;
-        return true;
-    }
-    protected int getScore(Color[][] cases)
-    {
-        int nb_decal = 0;
-        
-        for(int y = 0; y < MAX_H; y++)
-            if(isFullLine(cases, y))
-            {
-                nb_decal++;
-                
-                if(y == 0)
-                {
-                    for(int x = 0; x < MAX_W; x++)
-                        cases[x][0] = DEFAULT_COLOR;
-                }
-                else
-                {
-                    for(int y2 = y; y2 > 0; y2--)
-                        for(int x = 0; x < MAX_W; x++)
-                            cases[x][y2] = cases[x][y2 - 1];
-                }
-                
-                y--;
-            }
-        
-        return nb_decal;
     }
     
     
