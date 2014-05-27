@@ -18,6 +18,7 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -225,6 +226,19 @@ public class GameWindow extends JFrame implements KeyListener, MenuListener, Obs
                     case 0:
                         for(TetrisRuntime r : runtime.getRuntime())
                             r.Pause();
+                        
+                        int res = JOptionPane.showOptionDialog(null,
+                                    "Exit?",
+                                    "Exit?",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.WARNING_MESSAGE,
+                                    null, new String[] { "Exit", "Continue the game" }, null);
+                        
+                        if(res == 0)
+                            System.exit(0);
+                        
+                        for(TetrisRuntime r : runtime.getRuntime())
+                            r.Resume();
                         return;
 
                     case 1:
@@ -233,27 +247,32 @@ public class GameWindow extends JFrame implements KeyListener, MenuListener, Obs
                         return;
                 }
         
+        TetrisRuntime run;
         for(int player = 0; player < keysMap.length; player++)
-            for(int cmd = 0; cmd < keysMap[player].length; cmd++)
-                if(keysMap[player][cmd] == e.getKeyCode())
-                    switch(cmd)
-                    {
-                        case 0:
-                            runtime.getRuntime(player).MoveLeft();
-                            return;
-                            
-                        case 1:
-                            runtime.getRuntime(player).MoveRight();
-                            return;
-                            
-                        case 2:
-                            runtime.getRuntime(player).PushBottom();
-                            return;
-                            
-                        case 3:
-                            runtime.getRuntime(player).Rotate();
-                            return;
-                    }
+        {
+            run = runtime.getRuntime(player);
+            if(run != null)
+                for(int cmd = 0; cmd < keysMap[player].length; cmd++)
+                    if(keysMap[player][cmd] == e.getKeyCode())
+                        switch(cmd)
+                        {
+                            case 0:
+                                run.MoveLeft();
+                                return;
+
+                            case 1:
+                                run.MoveRight();
+                                return;
+
+                            case 2:
+                                run.PushBottom();
+                                return;
+
+                            case 3:
+                                run.Rotate();
+                                return;
+                        }
+        }
         
         if(System.getProperty("Debug") != null)
             System.out.println("KeyCode [" + e.getKeyChar() + " : " + e.getKeyCode() + "]");

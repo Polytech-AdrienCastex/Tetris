@@ -55,7 +55,10 @@ public class RuntimeManagerMulti<T extends Runtime> implements RuntimeManager
     @Override
     public T getRuntime(int player)
     {
-        return (T)runtimes[player];
+        if(player < runtimes.length)
+            return (T)runtimes[player];
+        else
+            return null;
     }
     @Override
     public T[] getRuntime()

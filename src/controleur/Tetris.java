@@ -13,6 +13,7 @@ import modele.general.RuntimeManager;
 import modele.tetris.TetrisRuntime;
 import modele.general.RuntimeManagerMulti;
 import modele.general.RuntimeManagerSolo;
+import vue.ChooseGameTypeWindow;
 import vue.GameWindow;
 
 /**
@@ -21,23 +22,13 @@ import vue.GameWindow;
  */
 public class Tetris
 {
+    private static int NB_MAX_PLAYERS = 4;
 
     public static void main(String[] args)
     {
         System.setProperty("Debug", "true");
         
-        int nb_Players = JOptionPane.showOptionDialog(null,
-                "How many players?",
-                "Choose how many players",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null, new String[]
-                {
-                    "1 player",
-                    "2 players",
-                    "3 players",
-                    "4 players"
-                }, null);
+        int nb_Players = new ChooseGameTypeWindow(NB_MAX_PLAYERS).getNbPlayers();
         
         if(nb_Players == -1)
             return;
